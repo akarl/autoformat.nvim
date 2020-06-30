@@ -1,0 +1,87 @@
+*autoformat.txt*	Synchronous auto formatting.
+
+Version: 1.0
+Author:  akarl
+License: MIT license
+
+CONTENTS						*autoformat-contents*
+
+Introduction		|autoformat-introduction|
+Usage			|autoformat-usage|
+Install			|autoformat-install|
+Examples		|autoformat-examples|
+Functions		|autoformat-functions|
+
+==============================================================================
+INTRODUCTION						*autoformat-introduction*
+
+*autoformat* or *autoformat.nvim* is a plugin for formatting buffer contents
+using external formatting tools such as gofmt.
+
+* All formatting runs synchronously so you can't edit any text while it's
+  being formatted.
+
+* Tries it's best to keep cursor positions in all buffers/windows.
+
+* Able to run multiple formatters after each other.
+
+* Operates in memory and not on disk.
+
+==============================================================================
+USAGE							*autoformat-usage*
+
+	To format the current buffer.
+>
+	:Autoformat
+<
+
+	To configure formatters.
+>
+	call autoformat#config('filetype', ['formatter1', 'formatter2'])
+<
+
+==============================================================================
+INSTALL							*autoformat-install*
+
+Note: autoformat.nvim requires Neovim 0.4.0+
+
+Extract the files and put them in your Neovim directory (usually
+`$XDG_CONFIG_HOME/nvim/`).
+
+
+==============================================================================
+EXAMPLES						*autoformat-examples*
+
+	Configure formatters per filetype.
+
+>
+	call autoformat#config('go',
+		\ ['goimports -local "$(go list -m)"', 'gofmt -s'])
+	call autoformat#config('python',
+		\ ['black -'])
+<
+
+	Automatically format buffer on write.
+>
+	autocmd! BufWritePre * :Autoformat
+<
+
+	Format on key mapping.
+>
+	nnoremap <Leader>= :Autoformat<CR>
+>
+
+==============================================================================
+FUNCTIONS						*autoformat-functions*
+
+autoformat#config({filetype}, {formatters})		*autoformat#config()*
+		Configure the formatting per filetype.
+		{formatters} is a list of formatters that can use stdin for input and
+		that ouputs the result on stdout.
+
+autoformat#format_buffer({bufnr})			*autoformat#format_buffer()*
+		Format the provided buffer. If the {bufnr} is 0, the current
+		buffer is used instead.
+
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:
